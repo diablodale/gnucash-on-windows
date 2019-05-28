@@ -80,7 +80,8 @@ $arch_long = "mingw-w64-$arch_code"
 $mingw_prefix = "$arch/$arch_long-"
 $mingw_path = "/$arch"
 $mingw_bin = "$mingw_path/bin"
-$mingw_url_prefix = "http://repo.msys2.org/mingw/$arch_code/$arch_long-"
+$msys2_repo_url = if ([string]::IsNullOrEmpty($Env:GNC_WINBUILDER_MSYS2_MIRROR)) { "http://repo.msys2.org" } else { $Env:GNC_WINBUILDER_MSYS2_MIRROR }
+$mingw_url_prefix = "$msys2_repo_url/mingw/$arch_code/$arch_long-"
 $env:MSYSTEM = $arch.ToUpper()
 
 if (!(test-path -path $target_dir)) {
@@ -129,8 +130,8 @@ function make-unixpath([string]$path) {
 # Install MSYS2 for the current machine's architechture.
 
 if (!(test-path -path $bash_path)) {
-    $mingw64_installer32 = "http://repo.msys2.org/distrib/i686/msys2-i686-20180531.exe"
-    $mingw64_installer64 = "http://repo.msys2.org/distrib/x86_64/msys2-x86_64-20180531.exe"
+    $mingw64_installer32 = "$msys2_repo_url/distrib/i686/msys2-i686-20180531.exe"
+    $mingw64_installer64 = "$msys2_repo_url/distrib/x86_64/msys2-x86_64-20180531.exe"
 
     $mingw64_installer_file = "$download_dir\msys2.exe"
     $mingw64_installer = If ([IntPtr]::size -eq 4) {$mingw64_installer32} Else {$mingw64_installer64}
